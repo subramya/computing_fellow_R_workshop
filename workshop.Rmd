@@ -1,0 +1,102 @@
+---
+title: "RWorkshop"
+output: html_document
+date: "2024-09-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Workshop!
+Welcome to the R Workshop! This session will cover the basics of R, a powerful programming language used for data analysis and statistical computing. You'll learn how to create variables, work with different data types, and use basic functions.
+
+# Basic R Syntax
+```{r}
+# Creating variables of different data types
+x <- 10                  # Numeric variable
+name <- "Sam"          # Character variable
+is_student <- TRUE       # Logical variable
+
+# Print the variables
+print(x)
+print(name)
+print(is_student)
+```
+
+# Arithmetic Operations in R
+You can perform arithmetic operations on numeric data. Let's try some basic operations.
+```{r}
+# Basic arithmetic operations
+sum <- 5 + 3             # Addition
+diff <- 10 - 4           # Subtraction
+prod <- 2 * 6            # Multiplication
+quotient <- 8 / 2        # Division
+power <- 2^3             # Exponentiation
+
+# Print the results
+sum
+diff
+prod
+quotient
+power
+
+```
+# Functions in R
+R has a variety of built-in functions. You can also create your own functions. Here are some examples:
+```{r}
+# Using built-in functions
+sqrt(25)                 # Square root
+log(100)                 # Natural logarithm
+round(3.14159, digits=2) # Rounding numbers
+
+# Creating a simple custom function
+multiply_by_two <- function(x) {
+  return(x * 2)
+}
+
+# Using the custom function
+multiply_by_two(6)
+```
+# Working with Vectors
+A vector is a basic data structure in R. You can create vectors using the c() function.
+```{r}
+# Creating a numeric vector
+numbers <- c(1, 2, 3, 4, 5)
+
+# Creating a character vector
+names <- c("Alice", "Bob", "Charlie")
+
+# Accessing elements of a vector
+numbers[1]       # First element
+names[2]         # Second element
+
+# Vector arithmetic
+numbers * 2      # Multiply each element by 2
+```
+
+## Data Analysis
+Olympic Summer Games - Paris 2024
+Dataset from Kaggle: https://www.kaggle.com/datasets/muhammadehsan02/olympic-summer-games-paris-2024?resource=download
+
+The read.csv() function is commonly used to import CSV files into R.
+```{r}
+# data <- read.csv("path/to/medallists.csv")
+data <- read.csv("/Users/Ramya_1/Desktop/medallists.csv")
+```
+
+# Data Structure & Summaries
+The str() and summary() functions are used to understand the data structure and statistical summaries.
+```{r}
+str(data)
+summary(data)
+```
+
+# Filtering Rows
+Use the filter() function from dplyr to extract specific data. For example, filtering by medal_type:
+```{r}
+library(dplyr) 
+gold_medals <- filter(data, medal_type == "Gold Medal")
+
+```
+
