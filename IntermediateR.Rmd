@@ -1,0 +1,109 @@
+---
+title: "IntermediateRWorkshop"
+output: pdf_document
+date: "2024-10-04"
+---
+## 1. Introduction to R Markdown 
+R Markdown is a dynamic document format that allows you to combine code and its output with documentation. You can write code, run it, and display both the output and interpretation in the same document.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+knitr::opts_chunk$set(echo = TRUE) allows you to print the code along with the output in the final document.
+
+## 2. Loading Packages
+You’ll need several packages to conduct statistical analysis and run linear regression models:
+Run this in console: install.packages(c("ggplot2", "readxl", "foreign", "lmtest"))
+
+```{r}
+library(ggplot2)
+library(readr)
+library(readxl)
+library(foreign)
+library(lmtest)
+```
+
+## 3. Exploratory Data Analysis (EDA)
+```{r}
+movies_data <- read_csv("/Users/Ramya_1/Desktop/movie.csv")
+# movies_data
+head(movies_data)
+summary(movies_data)
+```
+summary() provides an overview of each variable (min, max, mean, etc.).
+
+A. Plotting Data:
+ggplot(): This is used for visualizing data.
+The aes() function defines how data is mapped onto the plot
+```{r}
+# Plot popularity distribution
+ggplot(movies_data, aes(x = popularity)) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+  labs(title = "Popularity Distribution of Movies", x = "Popularity", y = "Count")
+```
+The histogram visualizes the distribution of the popularity variable, giving insights into the range and spread of movie popularity.
+
+B. Hypothesis Test
+Test if the average popularity of movies released after 2010 is different from those released before 2010.
+```{r}
+# Convert release_date to year
+movies_data$release_year <- as.numeric(format(as.Date(movies_data$release_date), "%Y"))
+
+# Split data into two groups: before and after 2010 
+# c(), filter(), subset()
+before_2010 <- subset(movies_data, release_year < 2010)
+after_2010 <- subset(movies_data, release_year >= 2010)
+
+# Perform t-test t.test()
+t_test_result <- t.test(before_2010$popularity, after_2010$popularity, alternative = "two.sided")
+t_test_result
+```
+
+The t-test compares the average popularity of movies before and after 2010.
+p-value: Helps determine if the difference in average popularity between the two periods is statistically significant (p < 0.05 means significant).
+
+C. Linear Regression
+Use linear regression to predict movie popularity based on average votes and the number of votes.
+```{r}
+# Linear regression model
+model <- lm(popularity ~ vote_average + vote_count + release_date, data = movies_data)
+
+# View the model summary
+summary(model)
+```
+lm() fits a linear model. The formula popularity ~ vote_average + vote_count means that we are modeling popularity as a function of vote_average and vote_count.
+summary() provides model details:
+Coefficients: Show the relationship between predictors (votes) and response (popularity).
+p-values: Indicate whether the predictors are statistically significant.
+
+D. Standard Error of Regression (SER)
+Calculate the SER for the linear regression model.
+```{r}
+# Calculate SER
+SER <- sqrt(sum(residuals(model)^2) / (nrow(movies_data) - length(coef(model))))
+SER
+```
+Residuals are the differences between observed and predicted values.
+SER gives an indication of how well the model fits the data. A lower SER means a better fit.
+
+E. Visualization of Regression Results 
+Visualize the relationship between popularity and vote average.
+```{r}
+# Plot vote_average vs popularity with a regression line
+ggplot(movies_data, aes(x = vote_average, y = popularity)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Popularity vs. Average Vote", x = "Average Vote", y = "Popularity")
+
+```
+geom_point() plots individual data points.
+geom_smooth(method = "lm") adds the linear regression line, showing how popularity changes with vote_average.
+
+## 4. Conclusion
+Summarize the workshop, recapping:
+Hypothesis Testing: We compared the popularity of movies before and after 2010.
+Linear Regression: We built a model to predict popularity based on vote average and count.
+Standard Error of Regression (SER): We calculated SER to assess model accuracy.
+Data Visualization: We used ggplot2 to visualize key relationships in the dataset.
+
